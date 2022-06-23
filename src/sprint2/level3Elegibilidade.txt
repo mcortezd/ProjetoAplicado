@@ -1,0 +1,27 @@
+@startuml Level3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama de componentes para o Sistema de recuperação de carrinho abandonado - Elegibilidade
+
+SHOW_PERSON_OUTLINE()
+LAYOUT_LEFT_RIGHT()
+
+Container_Boundary(esb, "Processo Elegibilidade"){
+  Component(commandE, "Command", "Spring Batch", "Inicia o processo de elegibilidade.")
+  Component(cartsE, "Componente de Busca de carrinhos","Java", "Busca dos carrinhos pendentes de envio naquele ciclo")
+  Component(rulesE, "Componente de Busca e execução das regras","Java", "Busca e aplica as regras")
+  Component(dataMapper, "Componente de DataMapper", "Spring Data", "Camada que maperia e trabalha com os dados.")
+ 
+  Rel(commandE, cartsE, "Usa")
+  Rel(commandE, rulesE, "Usa")
+  Rel(cartsE, dataMapper, "Consulta Carrinhos")
+  Rel(rulesE, dataMapper, "Consulta Regras")
+  Rel(rulesE, dataMapper, "Grava Itens eleitos")
+  
+
+}
+ContainerDb(db, "Banco de Dados", "Oracle Database Schema", "Armazena os dados dos carrinhos que estão na régua de comunicação, informação das réguas, quais processos disparos foram feitos.")
+Rel(dataMapper, db, "Lê e escreve em")
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml Level3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama de componentes para o Sistema de recuperação de carrinho abandonado - Camada de Serviços
+
+SHOW_PERSON_OUTLINE()
+LAYOUT_LEFT_RIGHT()
+
+
+System_Ext(lo, "Loja Online", "Permite que o cliente insira pedidos no carrinho de compras.")
+
+Container_Boundary(esb, "Camada de serviços"){
+  Component(newCart, "Controlador de Criação de novo carrinho", "Spring Boot", "Permite que a loja online avise o sistema que existe um carrinho abandonado.")
+  Component(updateCart, "Componente de Atualização de um carrinho","Spring Boot", "Permite que a loja online informe o sistema que um carrinho não precisa mais seguir na régua.")
+  Component(dataMapper, "Componente de DataMapper", "Spring Data", "Camada que maperia e trabalha com os dados.")
+ 
+  Rel(lo, newCart, "Faz chamadas de API para", "JSON/HTTPS")
+  Rel(lo, updateCart, "Faz chamadas de API para", "JSON/HTTPS")
+  
+  Rel(newCart, dataMapper, "Usa")
+  Rel(updateCart, dataMapper, "Usa")
+
+}
+ContainerDb(db, "Banco de Dados", "Oracle Database Schema", "Armazena os dados dos carrinhos que estão na régua de comunicação, informação das réguas, quais processos disparos foram feitos.")
+Rel(dataMapper, db, "Lê e escreve em")
+
+@enduml

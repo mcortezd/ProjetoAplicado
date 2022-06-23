@@ -1,0 +1,33 @@
+@startuml Level3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama de componentes para o Sistema de recuperação de carrinho abandonado - Campanha
+
+SHOW_PERSON_OUTLINE()
+LAYOUT_LEFT_RIGHT()
+
+Container_Boundary(esb, "Processo Campanha"){
+  Component(commandC, "Command", "Spring Batch", "Inicia o processo de disparo de campanhas.")
+  Component(cartsC, "Componente de Busca de processos eleitos","Java", "Busca processos pendentes de envio naquele ciclo")
+  Component(rulesC, "Componente de Busca e execução das regras de disparo","Java", "Busca e aplica as regras")
+  Component(adapterC, "Adapter disparo","Java", "Adapter para conexão com os diversos serviços de comunicação existentes")
+  Component(dataMapper, "Componente de DataMapper", "Spring Data", "Camada que maperia e trabalha com os dados.")
+ 
+  Rel(commandC, cartsC, "Usa")
+  Rel(commandC, rulesC, "Usa")
+  Rel(cartsC, dataMapper, "Consulta Carrinhos eleitos")
+  Rel(rulesC, dataMapper, "Consulta Regras")
+  Rel(rulesC, adapterC, "Consulta Regras")
+  Rel(rulesC, dataMapper, "Grava Itens enviados")
+  
+
+}
+ContainerDb(db, "Banco de Dados", "Oracle Database Schema", "Armazena os dados dos carrinhos que estão na régua de comunicação, informação das réguas, quais processos disparos foram feitos.")
+Rel(dataMapper, db, "Lê e escreve em")
+System_Ext(email, "Sistema de E-mail", "O sistema externo para envio de E-mail.")
+System_Ext(sms, "Sistema de SMS", "O sistema externo para envio de SMS.")
+Rel(adapterC, email, "Solicita envio")
+Rel(adapterC, sms, "Solicita envio")
+
+@enduml

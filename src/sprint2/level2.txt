@@ -1,0 +1,34 @@
+@startuml Level2
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama de contêineres para o Sistema de recuperação de carrinho abandonado
+
+SHOW_PERSON_OUTLINE()
+LAYOUT_LEFT_RIGHT()
+
+Person(client, "Cliente Loja Online", "Um cliente da loja que iniciou uma venda.")
+System_Ext(lo, "Loja Online", "Permite que o cliente insira pedidos no carrinho de compras.")
+System_Ext(email, "Sistema de E-mail", "O sistema externo para envio de E-mail.")
+System_Ext(sms, "Sistema de SMS", "O sistema externo para envio de SMS.")
+System_Boundary(ca, "Sistema Recuperação de Carrinho Abandonado"){
+  Container(esb, "Serviço de Captura do carrinho", "Java e Spring Boot", "Armazena os dados do carrinho para inicio das réguas de comunicação.")
+  Container(ele, "Processo de elegibilidade de campanhas","Spring Bath", "Elege os disparos que podem ser efetuados naquele momento.")
+  Container(dis, "Processo de disparo de campanhas", "Spring Bath", "Efetua a comunicação com os serviços de disparo.")
+  ContainerDb(db, "Banco de Dados", "Oracle Database Schema", "Armazena os dados dos carrinhos que estão na régua de comunicação, informação das réguas, quais processos disparos foram feitos.")
+  
+  Rel(esb, db, "Registra informações dos carrinhos")
+  Rel(ele, db, "Busca dos dados dos processos")
+  Rel(ele, dis, "Informa quais processos podem ser disparados nesse ciclo")
+  Rel(dis, db, "Armazena os dados dos disparos efetuados")
+  Rel(dis, email, "Envia e-mail usando")
+  Rel(dis, sms, "Envia e-mail usando")
+}
+Rel(client, lo, "Insere itens no carrinho de compra")
+Rel(lo, esb, "Informações do carrinho que foi abandonado")
+Rel(lo, esb, "Informações do carrinho que o carrinho foi finalizado")
+Rel(email, client, "Envia e-mail usando")
+Rel(sms, client, "Envia e-mail usando")
+
+
+@enduml
