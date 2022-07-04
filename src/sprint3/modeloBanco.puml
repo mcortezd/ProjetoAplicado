@@ -1,0 +1,71 @@
+@startuml
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity ReguaComunicacao {
+  * sq_reguaComunicacao:int
+  * id_reguaComnunicacao:varChar2(50)
+  --
+  * tx_nomeReguaComunicacao:varChar2(100)
+  ds_reguaComunicacao:varChar2(2000)
+}
+
+entity ReguaComunicacaoPasso {
+  * sq_reguaComunicacaoPasso:int
+  * sq_reguaComunicacao:int
+  --
+  * tx_nomeReguaComunicacaoPasso:varChar2(2000)
+  * sq_tipoComunicacao:int
+  * tx_conteudoReguaComunicacaoPasso:clob
+  * qt_intervaloReguaComunicacaoPasso:int
+  * id_tipoIntervaloReguaComunicacaoPasso:int
+}
+
+entity tipoComunicacao {
+  * sq_tipoComunicacao:int
+  --
+  * tx_tipoComunicacao:varChar2(2000)
+  * cd_tipoConteudo:varChar2(20)
+}
+
+entity CarrinhoAbandonado {
+  * sq_carrinhoAbandonado:int
+  --
+  * dt_inclusaoCarrinhoAbandonado:date
+  * tx_JsonDadosCarrinho:clob
+  * sq_status:int
+  * sq_reguaComunicacao:int
+}
+
+entity CarrinhoAbandonadoHistoricoExecucao {
+  * sq_carrinhoAbandonadoHistoricoExecucao:int
+  --
+  * sq_carrinhoAbandonado:int
+  * sq_reguaComunicacaoPasso:int
+  * dt_execucao:date
+  * ds_conteudoExecucao:clob
+  * ds_requestConteudoExecucao:clob
+  * ds_responseConteudoExecucao:clob
+  * sq_status:int
+  * sq_reguaComunicacao:int
+}
+
+entity Status {
+  * sq_reguaComunicacao:int
+  --
+  * tx_status:varChar2(50)
+}
+
+ReguaComunicacao --o{ ReguaComunicacaoPasso
+ReguaComunicacaoPasso --|| tipoComunicacao
+CarrinhoAbandonado --|| ReguaComunicacao
+CarrinhoAbandonado --|| Status
+CarrinhoAbandonado --o{ CarrinhoAbandonadoHistoricoExecucao
+CarrinhoAbandonadoHistoricoExecucao --|| ReguaComunicacaoPasso
+CarrinhoAbandonadoHistoricoExecucao --|| Status
+
+@enduml

@@ -4,6 +4,9 @@
 
 title Diagrama de contexto para o Sistema de recuperação de carrinho abandonado
 
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
 SHOW_PERSON_OUTLINE()
 
 Person(client, "Cliente Loja Online", "Um cliente da loja que iniciou uma venda.")
