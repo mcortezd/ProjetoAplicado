@@ -1,0 +1,28 @@
+@startuml
+!include <cloudinsight/tomcat>
+!include <cloudinsight/kafka>
+!include <cloudinsight/java>
+!include <cloudinsight/mysql>
+!include <cloudinsight/docker>
+
+title Cloudinsight sprites
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+skinparam monochrome true
+
+rectangle "<$docker><$java>\nAPICriacaoCarrinho" as CriacaoCarrinho
+rectangle "<$docker><$java>\nAPIAtualizacaoCarrinho" as AtualizacaoCarrinho
+
+rectangle "<$docker><$java>\nProcessoElegibilidade" as ProcessoElegibilidade
+rectangle "<$docker><$java>\nProcessoDisparoCampanhas" as ProcessoDisparoCampanhas
+
+database "<$mysql>\nDataBase" as database
+
+CriacaoCarrinho --> database
+AtualizacaoCarrinho --> database
+ProcessoElegibilidade --> database
+ProcessoDisparoCampanhas --> database
+@enduml
+
+

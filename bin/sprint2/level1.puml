@@ -1,0 +1,23 @@
+@startuml Level1
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama de contexto para o Sistema de recuperação de carrinho abandonado
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+SHOW_PERSON_OUTLINE()
+
+Person(client, "Cliente Loja Online", "Um cliente da loja que iniciou uma venda.")
+System_Ext(lo, "Loja Online", "Permite que o cliente insira pedidos no carrinho de compras.")
+System_Ext(email, "Sistema de E-mail", "O sistema externo para envio de E-mail.")
+System_Ext(sms, "Sistema de SMS", "O sistema externo para envio de SMS.")
+System(ca, "Sistema Recuperação de Carrinho Abandonado", "Elege e dispara as campanhas de comunicação com o cliente para tentativa de recuperação de carrinho de compras")
+Rel(client, lo, "Insere itens no carrinho de compra")
+Rel(lo, ca, "Informações do carrinho que foi abandonado")
+Rel(ca, email, "Envia e-mail usando")
+Rel(ca, sms, "Envia e-mail usando")
+Rel(email, client, "Envia e-mail usando")
+Rel(sms, client, "Envia e-mail usando")
+@enduml

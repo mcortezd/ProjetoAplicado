@@ -1,0 +1,53 @@
+@startuml
+
+class EligibilityCommand{
+	execute()
+}
+
+class Eligibility{
+	
+}
+
+class EligibilityProcess{
+	execute()
+}
+
+Abstract IteratorRule{
+	CurrentId()
+	First()
+	isDone()
+	Next()
+}
+
+Class ConcreteIterator{
+}
+
+class ConcreteCollection{
+}
+
+Abstract AbstractCollection{
+}
+
+
+interface IEligibilityRule
+abstract RuleCreator{
+	AnyOperation(): void
+	FactoryMethodForRule():IEligibilityRule
+}
+abstract EligibilityRuleCreator{
+	FactoryMethodForRule():IEligibilityRule
+}
+
+EligibilityProcess --|> EligibilityCommand
+EligibilityCommand --o  EligibilityProcess
+ConcreteCollection ..|> IEligibilityRule
+RuleCreator ..> IEligibilityRule
+EligibilityRuleCreator --|> RuleCreator
+Eligibility ..|> IteratorRule
+ConcreteIterator --|> IteratorRule
+ConcreteCollection ..> ConcreteIterator
+AbstractCollection --|> ConcreteCollection
+Eligibility --|> AbstractCollection
+EligibilityProcess --> Eligibility
+
+@enduml

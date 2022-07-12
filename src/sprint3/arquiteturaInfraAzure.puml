@@ -1,0 +1,26 @@
+
+@startuml
+!include <azure/AzureCommon>
+!include <azure/Analytics/AzureEventHub>
+!include <azure/Analytics/AzureStreamAnalytics>
+!include <azure/Databases/AzureCosmosDb>
+!include <azure/Containers/AzureContainerInstance>
+!include <azure/Containers/AzureKubernetesService>
+
+left to right direction
+skinparam linetype ortho
+
+AzureKubernetesService(CriacaoCarrinho, "API Criação de Carrinho", "Spring Boot; 3 TUs")
+AzureKubernetesService(AtualizacaoCarrinho, "API Atualização de Carrinho", "Spring Boot; 3 TUs")
+AzureKubernetesService(ProcessoElegibilidade, "Batch Elegibilidade", "Spring Batch; 3 TUs")
+AzureKubernetesService(ProcessoDisparoCampanhas, "Batch Disparo de Campanhas", "Spring Batch; 3 TUs")
+AzureCosmosDb(database, "Database", "1,000 RUs")
+
+CriacaoCarrinho --> database
+AtualizacaoCarrinho --> database
+ProcessoElegibilidade --> database
+ProcessoDisparoCampanhas --> database
+
+@enduml
+
+
