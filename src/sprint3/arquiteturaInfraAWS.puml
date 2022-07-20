@@ -1,0 +1,24 @@
+@startuml
+!include <awslib/AWSCommon>
+!include <awslib/Database/DynamoDB>
+!include <awslib/Containers/EKSCloud>
+!include <awslib/Compute/Batch>
+!include <awslib/Mobile/APIGateway>
+
+left to right direction
+skinparam linetype ortho
+
+APIGateway(ApiGateway, "API Gateway", "APIManagement")
+EKSCloud(CriacaoCarrinho, "API Criação de Carrinho", "Spring Boot")
+EKSCloud(AtualizacaoCarrinho, "API Atualização de Carrinho", "Spring Boot")
+Batch(ProcessoElegibilidade, "Batch Elegibilidade", "Spring Batch; 3 TUs")
+Batch(ProcessoDisparoCampanhas, "Batch Disparo de Campanhas", "Spring Batch; 3 TUs")
+DynamoDB(database, "Database", "1,000 RUs")
+
+ApiGateway --> CriacaoCarrinho
+ApiGateway --> AtualizacaoCarrinho
+CriacaoCarrinho --> database
+AtualizacaoCarrinho --> database
+ProcessoElegibilidade --> database
+ProcessoDisparoCampanhas --> database
+@enduml
